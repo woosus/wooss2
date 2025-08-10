@@ -1,0 +1,177 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BC Full v1.6</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{ --sidebar-w:300px; --acw:300px; --card-w:228px; --card-r:14px; --brand:#22c55e;
+        --bg:#0f1215; --p1:#171a1f; --bd:#2a2f36; --text:#e5e7eb; --logo-h:42px; }
+body{ background:var(--bg); color:var(--text); font-family:ui-sans-serif,system-ui,Inter; }
+.ringed{ box-shadow:0 0 0 1px var(--bd) inset; }
+.card{ border:1px solid var(--bd); background:var(--p1); border-radius:var(--card-r); }
+.no-scrollbar::-webkit-scrollbar{ display:none; } .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+
+/* Accordion (single column, wide, layered) */
+.ac-wrap{ position:relative; }
+.ac-body{ overflow:hidden; height:0; width:var(--acw); }
+.ac-open .ac-body{ height:auto; }
+.stagger-item{ opacity:0; transform:translateY(-14px) scale(.985);
+  transition: opacity .46s cubic-bezier(.16,.84,.44,1), transform .46s cubic-bezier(.16,.84,.44,1);
+  transition-delay: var(--stagger,0ms);
+  box-shadow: 0 10px 18px rgba(0,0,0,.28); will-change: transform, opacity; }
+.ac-open .stagger-item{ opacity:1; transform:translateY(0) scale(1); }
+.stagger-item+.stagger-item{ margin-top:8px; }
+/* Stacked edge effect */
+.stack{ position:relative; }
+.stack:before, .stack:after{ content:''; position:absolute; left:12px; right:12px; height:6px; border-radius:8px; background:#0c0f13; box-shadow:0 0 0 1px var(--bd) inset; }
+.stack:before{ top:-6px; opacity:.35; }
+.stack:after { bottom:-6px; opacity:.2; }
+
+.badge{ font-size:11px; padding:2px 6px; border-radius:999px; border:1px solid var(--bd); background:#11161b; }
+</style>
+</head>
+<body>
+<header class="sticky top-0 z-50" style="background:#13161B;border-bottom:1px solid var(--bd)">
+  <div class="mx-auto px-4 h-16 flex items-center gap-3" style="max-width:1480px;">
+    <div class="flex items-center gap-3">
+      <img alt="EURO247" src="assets/logo_euro247.png" style="height:var(--logo-h);width:auto;object-fit:contain;image-rendering:auto"/>
+    </div>
+    <div class="ml-4 hidden md:flex items-center gap-2 flex-1">
+      <div class="flex items-center gap-2 w-full max-w-2xl rounded-xl ringed px-3 py-2" style="background:var(--p1)">
+        <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.3-4.3m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.7 11.7z"/></svg>
+        <input class="bg-transparent outline-none text-sm w-full placeholder:text-neutral-500" placeholder="게임, 스튜디오, 카테고리 검색">
+      </div>
+    </div>
+    <div class="ml-auto flex items-center gap-2">
+      <div class="hidden lg:flex items-center gap-2">
+        <div class="px-2 py-1 rounded-xl ringed text-sm" style="background:#14181d">₩298</div>
+        <button class="px-3 py-1.5 rounded-xl text-sm" style="background:var(--brand);color:white">입금</button>
+        <button class="px-3 py-1.5 rounded-xl text-sm ringed" style="background:#14181d">출금</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">🎁</div>
+        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">✉️</div>
+        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">💬</div>
+        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">🔔</div>
+        <div class="w-8 h-8 grid place-items-center ringed rounded-full" style="background:#1a1f26">T</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="mx-auto px-4 flex gap-4" style="max-width:1480px;">
+  <aside class="hidden lg:block pt-4 pb-10" style="width:var(--sidebar-w)">
+    <nav class="space-y-2">
+      <!-- Top categories -->
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>🎫</span><span>복권</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>🧾</span><span>내 베팅</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>🎲</span><span>모든 복권</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>🧩</span><span>추천</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>⭐</span><span>즐겨찾기</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>🏛️</span><span>BC 복권</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 border border-transparent" href="#"><span>✨</span><span>인기</span></a>
+    </nav>
+
+    <!-- Accordion A -->
+    <div class="mt-4 rounded-xl ringed ac-wrap">
+      <button class="w-full flex items-center justify-between px-3 py-2 text-sm" data-acc="a">
+        <span class="text-neutral-300">Crypto Futures</span><span class="text-neutral-500">⌄</span></button>
+      <div class="ac-body px-2 pb-2 grid grid-cols-1 gap-2" data-body="a">
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>BTC</span><span class="badge">Cross</span></div></div>
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>ETH</span><span class="badge">Isolated</span></div></div>
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>USDT</span><span class="badge">Perp</span></div></div>
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>TRX</span><span class="badge">Perp</span></div></div>
+      </div>
+    </div>
+
+    <!-- Accordion B -->
+    <div class="mt-3 rounded-xl ringed ac-wrap">
+      <button class="w-full flex items-center justify-between px-3 py-2 text-sm" data-acc="b">
+        <span class="text-neutral-300">프로모션</span><span class="text-neutral-500">⌄</span></button>
+      <div class="ac-body px-2 pb-2 grid grid-cols-1 gap-2" data-body="b">
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>미션</span><span class="badge">Daily</span></div></div>
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>데일리</span><span class="badge">Streak</span></div></div>
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>스페셜</span><span class="badge">Bonus</span></div></div>
+        <div class="stagger-item stack px-3 py-2 rounded-lg ringed" style="background:#14181d"><div class="flex justify-between"><span>VIP</span><span class="badge">Club</span></div></div>
+      </div>
+    </div>
+
+    <nav class="space-y-2 mt-4">
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>👑</span><span>VIP 클럽</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>🎁</span><span>보너스</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>🤝</span><span>제휴사/지인 추천</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>💬</span><span>포럼</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>🧪</span><span>공정성 입증</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>🛡️</span><span>책임 있는 베팅</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>📰</span><span>블로그</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>📊</span><span>스포츠 베팅 분석</span></a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] hover:text-neutral-200 text-sm text-neutral-300 ringed bg-[#14181d]" href="#"><span>🤝</span><span>스폰서십</span></a>
+    </nav>
+  </aside>
+
+  <main class="flex-1 pt-4 pb-12">
+    <!-- Hero (3 banners) -->
+    <div class="relative rounded-2xl overflow-hidden ringed" style="background:var(--p1)">
+      <div id="slides" class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3">
+        <div class="rounded-xl card" style="height:152px;padding:16px;display:flex;align-items:flex-end;"><div><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold">토너먼트</div></div></div>
+        <div class="rounded-xl card" style="height:152px;padding:16px;display:flex;align-items:flex-end;"><div><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold">라이트닝 룰렛</div></div></div>
+        <div class="rounded-xl card" style="height:152px;padding:16px;display:flex;align-items:flex-end;"><div><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold">드롭스 & 윈</div></div></div>
+      </div>
+    </div>
+
+    <!-- Continue Playing -->
+    <section class="mt-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2"><h2 class="text-lg font-semibold">계속 플레이하기</h2><span class="text-sm text-neutral-400">즐겨찾기</span></div>
+        <div class="flex items-center gap-1 text-sm text-neutral-400"><button class="w-7 h-7 rounded-md ringed">‹</button><button class="w-7 h-7 rounded-md ringed">›</button></div>
+      </div>
+      <div class="mt-3 grid gap-3" style="grid-template-columns: repeat(6, var(--card-w));">
+        <div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_01.png' alt='slot 01'/></div><div class='p-3'><div class='text-sm'>Super Spin 01</div><div class='mt-2 text-xs text-neutral-400'>PG • 27</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_02.png' alt='slot 02'/></div><div class='p-3'><div class='text-sm'>Super Spin 02</div><div class='mt-2 text-xs text-neutral-400'>PG • 34</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_03.png' alt='slot 03'/></div><div class='p-3'><div class='text-sm'>Super Spin 03</div><div class='mt-2 text-xs text-neutral-400'>PG • 41</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_04.png' alt='slot 04'/></div><div class='p-3'><div class='text-sm'>Super Spin 04</div><div class='mt-2 text-xs text-neutral-400'>PG • 48</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_05.png' alt='slot 05'/></div><div class='p-3'><div class='text-sm'>Super Spin 05</div><div class='mt-2 text-xs text-neutral-400'>PG • 55</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_06.png' alt='slot 06'/></div><div class='p-3'><div class='text-sm'>Super Spin 06</div><div class='mt-2 text-xs text-neutral-400'>PG • 62</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_07.png' alt='slot 07'/></div><div class='p-3'><div class='text-sm'>Super Spin 07</div><div class='mt-2 text-xs text-neutral-400'>PG • 69</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_08.png' alt='slot 08'/></div><div class='p-3'><div class='text-sm'>Super Spin 08</div><div class='mt-2 text-xs text-neutral-400'>PG • 76</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_09.png' alt='slot 09'/></div><div class='p-3'><div class='text-sm'>Super Spin 09</div><div class='mt-2 text-xs text-neutral-400'>PG • 83</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_10.png' alt='slot 10'/></div><div class='p-3'><div class='text-sm'>Super Spin 10</div><div class='mt-2 text-xs text-neutral-400'>PG • 90</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_11.png' alt='slot 11'/></div><div class='p-3'><div class='text-sm'>Super Spin 11</div><div class='mt-2 text-xs text-neutral-400'>PG • 97</div></div></div><div class='group card overflow-hidden'><div class='relative' style='aspect-ratio:4/5;'><img class='absolute inset-0 w-full h-full object-cover' src='assets/slots/slot_12.png' alt='slot 12'/></div><div class='p-3'><div class='text-sm'>Super Spin 12</div><div class='mt-2 text-xs text-neutral-400'>PG • 104</div></div></div>
+      </div>
+    </section>
+
+    <!-- 2 big + 4 small tiles -->
+    <section class="mt-6">
+      <div class="grid grid-cols-12 gap-3 auto-rows-[140px] lg:auto-rows-[180px]">
+        <div class="card col-span-12 md:col-span-6 row-span-2 p-5"><div class="text-lg font-semibold">카지노</div><p class="text-sm mt-1 text-neutral-300">라이브/슬롯 허브</p></div>
+        <div class="card col-span-12 md:col-span-6 row-span-2 p-5"><div class="text-lg font-semibold">스포츠</div><p class="text-sm mt-1 text-neutral-300">프리매치·라이브</p></div>
+        <div class="card col-span-6 md:col-span-3 p-4"><div class="font-semibold">복권</div></div>
+        <div class="card col-span-6 md:col-span-3 p-4"><div class="font-semibold">레이싱</div></div>
+        <div class="card col-span-6 md:col-span-3 p-4"><div class="font-semibold">업다운</div></div>
+        <div class="card col-span-6 md:col-span-3 p-4"><div class="font-semibold">빙고</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+// Auto slide
+setInterval(()=>{ const g=document.getElementById('slides'); if(g&&g.firstElementChild) g.appendChild(g.firstElementChild); }, 4000);
+
+// Cascade (one-by-one)
+function setStagger(c, opening){
+  const items=[...c.querySelectorAll('.stagger-item')];
+  const base=95;
+  items.forEach((el,i)=>{ el.style.setProperty('--stagger', ((opening?i:(items.length-1-i))*base)+'ms'); });
+}
+document.querySelectorAll('[data-acc]').forEach(btn=>{
+  const key=btn.getAttribute('data-acc');
+  const body=document.querySelector('[data-body="'+key+'"]');
+  let open=false;
+  btn.addEventListener('click',()=>{
+    open=!open;
+    if(open){
+      body.classList.add('ac-open');
+      body.style.height='auto'; const h=body.clientHeight+'px'; body.style.height='0px';
+      requestAnimationFrame(()=>{ body.style.transition='height .46s cubic-bezier(.16,.84,.44,1)'; body.style.height=h; });
+      setStagger(body,true);
+      body.addEventListener('transitionend',function f(){ body.style.height='auto'; body.style.transition=''; body.removeEventListener('transitionend',f); });
+    } else {
+      const h=body.clientHeight+'px'; body.style.height=h;
+      requestAnimationFrame(()=>{ body.style.transition='height .38s cubic-bezier(.16,.84,.44,1)'; body.style.height='0px'; });
+      setStagger(body,false);
+      body.addEventListener('transitionend',function f(){ body.classList.remove('ac-open'); body.style.transition=''; body.removeEventListener('transitionend',f); });
+    }
+  });
+});
+</script>
+</body></html>
