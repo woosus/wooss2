@@ -1,6 +1,6 @@
 <!doctype html><html lang="ko"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BC Full v1.6.1 (Mobile Drawer)</title>
+<title>BC Full v1.6.4 (Rebuilt)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root{ --sidebar-w:300px; --acw:300px; --card-w:228px; --card-r:14px; --brand:#22c55e;
@@ -9,74 +9,98 @@ body{ background:var(--bg); color:var(--text); font-family:ui-sans-serif,system-
 .ringed{ box-shadow:0 0 0 1px var(--bd) inset; }
 .card{ border:1px solid var(--bd); background:var(--p1); border-radius:var(--card-r); }
 .no-scrollbar::-webkit-scrollbar{ display:none; } .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
-.ac-body{ overflow:hidden; height:0; width:var(--acw); } .ac-open .ac-body{ height:auto; }
-.stagger-item{ opacity:0; transform:translateY(-14px) scale(.985);
-  transition: opacity .46s cubic-bezier(.16,.84,.44,1), transform .46s cubic-bezier(.16,.84,.44,1);
-  transition-delay: var(--stagger,0ms); box-shadow: 0 10px 18px rgba(0,0,0,.28); }
-.ac-open .stagger-item{ opacity:1; transform:translateY(0) scale(1); }
-.tile{ border:1px solid var(--bd); border-radius:16px; background:linear-gradient(180deg,#1b2026,#15191e); padding:18px; }
+
+/* Bold & White typography boost */
+aside nav a span, .drawer .panel nav a span, [data-acc] span:first-child, .ac-body button, .tile .font-semibold, main h2, .card .p-3 .text-sm, .badge{
+  color:#fff !important; font-weight:700 !important; letter-spacing:0.2px; text-shadow:0 1px 1px rgba(0,0,0,.35);
+}
+button[data-acc]{ color:#fff !important; font-weight:700 !important; }
+.text-neutral-300, .text-neutral-400, .text-neutral-500 { color:#e6eefb99; font-weight:600; }
+
 /* Drawer */
-.drawer{ position:fixed; inset:0; z-index:60; display:none; }
-.drawer.open{ display:block; }
+.drawer{ position:fixed; inset:0; z-index:60; display:none; } .drawer.open{ display:block; }
 .drawer .panel{ position:absolute; top:0; bottom:0; left:0; width:var(--sidebar-w); background:#11161b; border-right:1px solid var(--bd); transform:translateX(-100%); transition:transform .36s cubic-bezier(.16,.84,.44,1); }
 .drawer.open .panel{ transform:translateX(0); }
-.drawer .backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); opacity:0; transition:opacity .36s; }
-.drawer.open .backdrop{ opacity:1; }
+.drawer .backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); opacity:0; transition:opacity .36s; } .drawer.open .backdrop{ opacity:1; }
+
+/* Left accordion (single column) */
+.ac-body{ overflow:hidden; height:0; width:var(--acw); } .ac-open .ac-body{ height:auto; }
+.stagger-item{ opacity:0; transform:translateY(-14px) scale(.985); transition: opacity .46s cubic-bezier(.16,.84,.44,1), transform .46s cubic-bezier(.16,.84,.44,1); transition-delay: var(--stagger,0ms); box-shadow: 0 10px 18px rgba(0,0,0,.28); }
+.ac-open .stagger-item{ opacity:1; transform:translateY(0) scale(1); }
+
+/* Top category collapsible */
+.topcat .ac-body{ overflow:hidden; height:0; } .topcat.open .ac-body{ height:auto; }
+.topcat .stagger-item{ opacity:0; transform:translateY(-12px); transition:opacity .42s cubic-bezier(.16,.84,.44,1), transform .42s cubic-bezier(.16,.84,.44,1); transition-delay:var(--stagger,0ms); }
+.topcat.open .stagger-item{ opacity:1; transform:translateY(0); }
+
+/* Action saber */
+.action-wrap{ position:relative; display:flex; align-items:center; gap:8px; }
+.saber{ position:relative; height:40px; border-radius:999px; overflow:hidden; border:1px solid var(--bd); background:linear-gradient(90deg,#0f1318,#151a1f); width:0; transform-origin:left center; transform:scaleX(0); opacity:.0; box-shadow:0 0 0 0 rgba(34,197,94,.0) inset; }
+.saber.open{ animation:openSaber .42s cubic-bezier(.16,.84,.44,1) forwards; }
+.saber.close{ animation:closeSaber .34s cubic-bezier(.16,.84,.44,1) forwards; }
+.saber::before{ content:''; position:absolute; inset:0; background:radial-gradient(90% 150% at 0% 50%, rgba(34,197,94,.35), transparent 60%); pointer-events:none; }
+@keyframes openSaber{ 0%{ width:0; transform:scaleX(0); opacity:.0; } 60%{ width:360px; transform:scaleX(1); opacity:1; box-shadow:0 0 24px 0 rgba(34,197,94,.22) inset; } 100%{ width:520px; transform:scaleX(1); opacity:1; box-shadow:0 0 16px 0 rgba(34,197,94,.18) inset; } }
+@keyframes closeSaber{ 0%{ width:520px; transform:scaleX(1); opacity:1; } 100%{ width:0; transform:scaleX(0); opacity:0; } }
+.saber .item{ opacity:0; transform:translateY(6px); transition:opacity .3s, transform .3s; }
+.saber.ready .item{ opacity:1; transform:translateY(0); }
+.saber .btn{ height:32px; padding:0 14px; border-radius:10px; border:1px solid var(--bd); background:#14181d; color:#fff; font-weight:700; font-size:13px; }
+.saber .sep{ width:1px; height:20px; background:#2a2f36; opacity:.7; }
+@media (max-width:640px){ .saber{ height:38px; } .saber.open{ animation-duration:.38s; } .saber.close{ animation-duration:.30s; } }
+
+/* === v1.6.5: Center-split spaceship doors === */
+.saber2{ position:relative; height:40px; border-radius:999px; overflow:hidden;
+  border:1px solid var(--bd); background:linear-gradient(90deg,#0f1318,#151a1f);
+  width:0; opacity:0; transform:scaleX(0.9); transform-origin:center; }
+.saber2.open{ animation:saber2Grow .60s cubic-bezier(.22,.9,.32,1) forwards; }
+.saber2.close{ animation:saber2Close .48s cubic-bezier(.22,.9,.32,1) forwards; }
+@keyframes saber2Grow{ 0%{width:0;opacity:0;transform:scaleX(.9);} 100%{width:560px;opacity:1;transform:scaleX(1);} }
+@keyframes saber2Close{ 0%{width:560px;opacity:1;transform:scaleX(1);} 100%{width:0;opacity:0;transform:scaleX(.9);} }
+
+/* seam glow */
+.saber2::after{ content:''; position:absolute; inset:0; margin:auto; width:2px; height:100%;
+  background:linear-gradient(180deg, rgba(34,197,94,.9), rgba(34,197,94,.2));
+  filter:blur(0.5px); opacity:0; }
+.saber2.open::after{ animation:seamGlow .9s ease-out .08s forwards; }
+@keyframes seamGlow{ 0%{opacity:0;} 40%{opacity:1;} 100%{opacity:.35;} }
+
+/* doors */
+.saber2 .door{ position:absolute; top:0; bottom:0; width:50%; background:linear-gradient(180deg,#0f1318,#171d24);
+  box-shadow:inset 0 0 0 1px var(--bd), 0 10px 18px rgba(0,0,0,.28); }
+.saber2 .door.left{ left:0; border-right:1px solid rgba(34,197,94,.25); transform:translateX(0); }
+.saber2 .door.right{ right:0; border-left:1px solid rgba(34,197,94,.25); transform:translateX(0); }
+.saber2.open .door.left{ animation:doorOpenLeft 1.05s cubic-bezier(.16,.84,.44,1) .06s forwards; }
+.saber2.open .door.right{ animation:doorOpenRight 1.05s cubic-bezier(.16,.84,.44,1) .06s forwards; }
+@keyframes doorOpenLeft{ 0%{transform:translateX(0);} 78%{transform:translateX(-52%);} 100%{transform:translateX(-58%);} }
+@keyframes doorOpenRight{ 0%{transform:translateX(0);} 78%{transform:translateX(52%);} 100%{transform:translateX(58%);} }
+
+/* items behind doors */
+.saber2 .items{ position:absolute; inset:0; display:flex; align-items:center; gap:8px; padding:0 10px 0 14px; }
+.saber2 .item{ opacity:0; transform:translateY(6px); transition:opacity .32s, transform .32s; }
+.saber2.ready .item{ opacity:1; transform:translateY(0); }
+.saber2 .btn{ height:32px; padding:0 14px; border-radius:10px; border:1px solid var(--bd); background:#14181d; color:#fff; font-weight:700; font-size:13px; }
+.saber2 .sep{ width:1px; height:20px; background:#2a2f36; opacity:.7; }
+
+@media (max-width:640px){
+  .saber2{ height:38px; }
+}
+
 </style>
-<style id="bold-white-typography">
-/* ===== Readability boost: bold & white ===== */
-aside nav a span,
-.drawer .panel nav a span,
-[data-acc] span:first-child,
-.ac-body button,
-.tile .font-semibold,
-main h2,
-.card .p-3 .text-sm,
-.badge {
-  color:#ffffff !important;
-  font-weight:700 !important;
-  letter-spacing:0.2px;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-}
-
-/* Accordion buttons themselves */
-button[data-acc] {
-  color:#ffffff !important;
-  font-weight:700 !important;
-}
-
-/* Ensure small labels inside hero/cards keep contrast */
-.text-neutral-300, .text-neutral-400, .text-neutral-500 {
-  color:#e6eefb99; /* slightly brighter on dark bg */
-  font-weight:600;
-}
-</style>
-
 </head>
 <body>
 <header class="sticky top-0 z-50" style="background:#13161B;border-bottom:1px solid var(--bd)">
   <div class="mx-auto px-3 sm:px-4 h-16 flex items-center gap-2 sm:gap-3" style="max-width:1480px;">
     <button id="openDrawer" class="w-10 h-10 grid place-items-center rounded-lg ringed sm:hidden" style="background:#14181d">☰</button>
-    <div class="flex items-center gap-3">
-      <img alt="EURO247" src="assets/logo_euro247.png" style="height:var(--logo-h);width:auto;object-fit:contain;image-rendering:auto"/>
-    </div>
-    <div class="ml-2 sm:ml-4 flex-1">
-      <div class="flex items-center gap-2 w-full rounded-xl ringed px-3 py-2" style="background:var(--p1)">
-        <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.3-4.3m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.7 11.7z"/></svg>
-        <input class="bg-transparent outline-none text-sm w-full placeholder:text-neutral-500" placeholder="게임, 스튜디오, 카테고리 검색">
-      </div>
-    </div>
-    <div class="ml-auto flex items-center gap-2">
+    <div class="flex items-center gap-3"><img alt="EURO247" src="assets/logo_euro247.png" style="height:var(--logo-h);width:auto;object-fit:contain;image-rendering:auto"/></div>
+    <div class="ml-2 sm:ml-4 flex-1"><div class="flex items-center gap-2 w-full rounded-xl ringed px-3 py-2" style="background:var(--p1)">
+      <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.3-4.3m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.7 11.7z"/></svg>
+      <input class="bg-transparent outline-none text-sm w-full placeholder:text-neutral-500" placeholder="게임, 스튜디오, 카테고리 검색"></div></div>
+    <div class="ml-auto flex items-center gap-2 action-wrap">
       <div class="px-2 py-1 rounded-xl ringed text-sm hidden sm:block" style="background:#14181d">₩298</div>
       <button class="px-3 py-2 rounded-xl text-sm" style="background:var(--brand);color:white">입금</button>
-      <button class="hidden sm:block px-3 py-2 rounded-xl text-sm ringed" style="background:#14181d">출금</button>
-      <div class="hidden sm:flex items-center gap-2">
-        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">🎁</div>
-        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">✉️</div>
-        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">💬</div>
-        <div class="w-8 h-8 grid place-items-center ringed rounded-lg" style="background:#14181d">🔔</div>
-      </div>
-      <div class="w-8 h-8 grid place-items-center ringed rounded-full" style="background:#1a1f26">T</div>
+      <button id="saberToggle" class="w-10 h-10 grid place-items-center rounded-lg ringed" style="background:#14181d">⚡</button>
+      <div id="saberBar" class="saber2"><div class="items"><div class="w-full h-full flex items-center gap-2 px-3">
+        <button class="item btn">출금</button><div class="sep item"></div><button class="item btn">보너스</button><button class="item btn">쿠폰</button><div class="sep item"></div><button class="item btn">알림</button><button class="item btn">문의</button>
+      </div><div class="door left"></div><div class="door right"></div></div>
     </div>
   </div>
 </header>
@@ -85,8 +109,7 @@ button[data-acc] {
 <div id="drawer" class="drawer lg:hidden">
   <div class="backdrop" id="closeDrawer"></div>
   <aside class="panel overflow-y-auto no-scrollbar">
-    <div class="p-3">
-      <div class="text-xs text-neutral-400 mb-2">메뉴</div>
+    <div class="p-3"><div class="text-xs text-neutral-400 mb-2">메뉴</div>
       <nav class="space-y-2">
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🎫</span><span>복권</span></a>
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🧾</span><span>내 베팅</span></a>
@@ -96,7 +119,6 @@ button[data-acc] {
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🏛️</span><span>BC 복권</span></a>
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>✨</span><span>인기</span></a>
       </nav>
-
       <div class="mt-3 rounded-xl ringed">
         <button class="w-full flex items-center justify-between px-3 py-2 text-sm" data-acc="ma"><span class="text-neutral-300">Crypto Futures</span><span class="text-neutral-500">⌄</span></button>
         <div class="ac-body px-2 pb-2 grid grid-cols-1 gap-2" data-body="ma">
@@ -106,7 +128,6 @@ button[data-acc] {
           <button class="px-3 py-2 rounded-lg bg-[#14181d] ringed text-sm stagger-item">TRX</button>
         </div>
       </div>
-
       <div class="mt-3 rounded-xl ringed">
         <button class="w-full flex items-center justify-between px-3 py-2 text-sm" data-acc="mb"><span class="text-neutral-300">프로모션</span><span class="text-neutral-500">⌄</span></button>
         <div class="ac-body px-2 pb-2 grid grid-cols-1 gap-2" data-body="mb">
@@ -116,34 +137,31 @@ button[data-acc] {
           <button class="px-3 py-2 rounded-lg bg-[#14181d] ringed text-sm stagger-item">VIP</button>
         </div>
       </div>
-
-      <nav class="space-y-2 mt-3">
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>👑</span><span>VIP 클럽</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🎁</span><span>보너스</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🤝</span><span>제휴사/지인 추천</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>💬</span><span>포럼</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🧪</span><span>공정성 입증</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🛡️</span><span>책임 있는 베팅</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>📰</span><span>블로그</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>📊</span><span>스포츠 베팅 분석</span></a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🤝</span><span>스폰서십</span></a>
-      </nav>
-      <div class="h-10"></div>
     </div>
   </aside>
 </div>
 
 <div class="mx-auto px-4 flex gap-4" style="max-width:1480px;">
   <aside class="hidden lg:block pt-4 pb-10" style="width:var(--sidebar-w)">
-    <nav class="space-y-2">
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🎫</span><span>복권</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🧾</span><span>내 베팅</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🎲</span><span>모든 복권</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🧩</span><span>추천</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>⭐</span><span>즐겨찾기</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🏛️</span><span>BC 복권</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>✨</span><span>인기</span></a>
-    </nav>
+    <!-- Collapsible top categories -->
+    <div class="topcat">
+      <button id="topcatToggle" class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg ringed" style="background:#14181d">
+        <span class="font-semibold">카테고리</span><span class="text-neutral-400">⌄</span>
+      </button>
+      <div class="ac-body mt-2">
+        <nav class="space-y-2">
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🎫</span><span>복권</span></a>
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🧾</span><span>내 베팅</span></a>
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🎲</span><span>모든 복권</span></a>
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🧩</span><span>추천</span></a>
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>⭐</span><span>즐겨찾기</span></a>
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>🏛️</span><span>BC 복권</span></a>
+          <a class="flex items-center gap-3 px-3 py-2 stagger-item rounded-lg hover:bg-[#15191e] text-sm text-neutral-300" href="#"><span>✨</span><span>인기</span></a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Accordions -->
     <div class="mt-4 rounded-xl ringed">
       <button class="w-full flex items-center justify-between px-3 py-2 text-sm" data-acc="a"><span class="text-neutral-300">Crypto Futures</span><span class="text-neutral-500">⌄</span></button>
       <div class="ac-body px-2 pb-2 grid grid-cols-1 gap-2" data-body="a">
@@ -162,28 +180,28 @@ button[data-acc] {
         <button class="px-3 py-2 rounded-lg bg-[#14181d] ringed text-sm stagger-item">VIP</button>
       </div>
     </div>
-    <nav class="space-y-2 mt-4">
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>👑</span><span>VIP 클럽</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🎁</span><span>보너스</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🤝</span><span>제휴사/지인 추천</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>💬</span><span>포럼</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🧪</span><span>공정성 입증</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🛡️</span><span>책임 있는 베팅</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>📰</span><span>블로그</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>📊</span><span>스포츠 베팅 분석</span></a>
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg ringed bg-[#14181d] text-sm text-neutral-300" href="#"><span>🤝</span><span>스폰서십</span></a>
-    </nav>
   </aside>
 
   <main class="flex-1 pt-4 pb-12">
+    <!-- Triptych hero -->
     <div class="relative rounded-2xl overflow-hidden ringed" style="background:var(--p1)">
-      <div id="slides" class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3">
-        <div class="rounded-xl card" style="height:152px;padding:16px;display:flex;align-items:flex-end;"><div><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold">토너먼트</div></div></div>
-        <div class="rounded-xl card" style="height:152px;padding:16px;display:flex;align-items:flex-end;"><div><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold">라이트닝 룰렛</div></div></div>
-        <div class="rounded-xl card" style="height:152px;padding:16px;display:flex;align-items:flex-end;"><div><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold">드롭스 & 윈</div></div></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3">
+        <div class="rounded-xl card overflow-hidden relative" style="height:152px; padding:0;">
+          <img src="assets/hero_pano_1.png" alt="hero left" class="w-full h-full object-cover"/>
+          <div class="absolute left-5 bottom-5"><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold text-white">라이트닝 룰렛</div></div>
+        </div>
+        <div class="rounded-xl card overflow-hidden relative" style="height:152px; padding:0;">
+          <img src="assets/hero_pano_2.png" alt="hero center" class="w-full h-full object-cover"/>
+          <div class="absolute left-5 bottom-5"><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold text-white">드롭스 & 윈</div></div>
+        </div>
+        <div class="rounded-xl card overflow-hidden relative" style="height:152px; padding:0;">
+          <img src="assets/hero_pano_3.png" alt="hero right" class="w-full h-full object-cover"/>
+          <div class="absolute left-5 bottom-5"><div class="text-sm text-neutral-300">스페셜</div><div class="font-semibold text-white">토너먼트</div></div>
+        </div>
       </div>
     </div>
 
+    <!-- Continue Playing -->
     <section class="mt-6">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2"><h2 class="text-lg font-semibold">계속 플레이하기</h2><span class="text-sm text-neutral-400">즐겨찾기</span></div>
@@ -194,6 +212,7 @@ button[data-acc] {
       </div>
     </section>
 
+    <!-- 2 big + 4 small tiles -->
     <section class="mt-6">
       <div class="grid grid-cols-12 gap-3 auto-rows-[140px] lg:auto-rows-[180px]">
         <div class="card col-span-12 md:col-span-6 row-span-2 p-5"><div class="text-lg font-semibold">카지노</div><p class="text-sm mt-1 text-neutral-300">라이브/슬롯 허브</p></div>
@@ -208,35 +227,68 @@ button[data-acc] {
 </div>
 
 <script>
-// Drawer open/close
+// Drawer
 const drawer=document.getElementById('drawer');
-document.getElementById('openDrawer').addEventListener('click',()=>{ drawer.classList.add('open'); document.body.style.overflow='hidden'; });
-document.getElementById('closeDrawer').addEventListener('click',()=>{ drawer.classList.remove('open'); document.body.style.overflow=''; });
+const openDrawer=document.getElementById('openDrawer');
+const closeDrawer=document.getElementById('closeDrawer');
+if(openDrawer){ openDrawer.addEventListener('click',()=>{ drawer.classList.add('open'); document.body.style.overflow='hidden'; }); }
+if(closeDrawer){ closeDrawer.addEventListener('click',()=>{ drawer.classList.remove('open'); document.body.style.overflow=''; }); }
 
-// Auto slide
-setInterval(()=>{ const g=document.getElementById('slides'); if(g&&g.firstElementChild) g.appendChild(g.firstElementChild); }, 4000);
-
-// Stagger helper
-function setStagger(c, opening){
-  const items=[...c.querySelectorAll('.stagger-item')]; const base=95;
-  items.forEach((el,i)=>{ el.style.setProperty('--stagger', ((opening?i:(items.length-1-i))*base)+'ms'); });
-}
-// Bind for both desktop and mobile accordions
-document.querySelectorAll('[data-acc]').forEach(btn=>{
-  const key=btn.getAttribute('data-acc'); const body=document.querySelector('[data-body="'+key+'"]'); let open=false;
+// Left accordions
+function bindAcc(){ document.querySelectorAll('[data-acc]').forEach(btn=>{
+  const key=btn.getAttribute('data-acc'); const body=document.querySelector('[data-body="'+key+'"]'); if(!body) return; let open=false;
   btn.addEventListener('click',()=>{
     open=!open;
     if(open){ body.classList.add('ac-open'); body.style.height='auto'; const h=body.clientHeight+'px'; body.style.height='0px';
       requestAnimationFrame(()=>{ body.style.transition='height .46s cubic-bezier(.16,.84,.44,1)'; body.style.height=h; });
-      setStagger(body,true);
+      const items=[...body.querySelectorAll('.stagger-item')]; const base=95; items.forEach((el,i)=>{ el.style.setProperty('--stagger', (i*base)+'ms'); });
       body.addEventListener('transitionend',function f(){ body.style.height='auto'; body.style.transition=''; body.removeEventListener('transitionend',f); });
-    } else {
-      const h=body.clientHeight+'px'; body.style.height=h;
+    } else { const h=body.clientHeight+'px'; body.style.height=h;
       requestAnimationFrame(()=>{ body.style.transition='height .38s cubic-bezier(.16,.84,.44,1)'; body.style.height='0px'; });
-      setStagger(body,false);
-      body.addEventListener('transitionend',function f(){ body.classList.remove('ac-open'); body.style.transition=''; body.removeEventListener('transitionend',f); });
     }
   });
-});
+});}
+bindAcc();
+
+// Top categories collapsible
+(function(){
+  const topcat=document.querySelector('.topcat'); if(!topcat) return;
+  const btn=document.getElementById('topcatToggle'); const body=topcat.querySelector('.ac-body'); let open=false;
+  btn.addEventListener('click',()=>{
+    open=!open; topcat.classList.toggle('open', open);
+    if(open){ body.style.height='auto'; const h=body.clientHeight+'px'; body.style.height='0px';
+      requestAnimationFrame(()=>{ body.style.transition='height .42s cubic-bezier(.16,.84,.44,1)'; body.style.height=h; });
+      const items=[...topcat.querySelectorAll('.stagger-item')]; const base=75; items.forEach((el,i)=>{ el.style.setProperty('--stagger',(i*base)+'ms'); });
+      body.addEventListener('transitionend',function f(){ body.style.height='auto'; body.style.transition=''; body.removeEventListener('transitionend',f); });
+    }else{ const h=body.clientHeight+'px'; body.style.height=h; requestAnimationFrame(()=>{ body.style.transition='height .34s cubic-bezier(.16,.84,.44,1)'; body.style.height='0px'; }); }
+  });
+})();
+
+
+// v1.6.5 center-split saber2
+(function(){
+  const saber=document.getElementById('saberBar'); const toggle=document.getElementById('saberToggle'); if(!saber||!toggle) return;
+  let open=false; let timer=null;
+  toggle.addEventListener('click',()=>{
+    clearTimeout(timer);
+    saber.classList.remove('open','close','ready');
+    open=!open;
+    if(open){
+      saber.classList.add('open');
+      // Stagger the items as saber opens
+      const items=[...saber.querySelectorAll('.item')];
+      items.forEach((el,i)=>{ el.style.transitionDelay = (520 + i*110) + 'ms'; });
+      timer=setTimeout(()=>{ saber.classList.add('ready'); }, 520);
+    }else{
+      saber.classList.add('close');
+    }
+  });
+})();
+
+(function(){
+  const saber=document.getElementById('saberBar'); const toggle=document.getElementById('saberToggle'); let open=false; let timer=null;
+  if(!saber||!toggle) return;
+  toggle.addEventListener('click',()=>{ clearTimeout(timer); open=!open; saber.classList.remove('close','open','ready'); if(open){ saber.classList.add('open'); timer=setTimeout(()=>{ saber.classList.add('ready'); }, 280); } else { saber.classList.add('close'); } });
+})();
 </script>
 </body></html>
