@@ -6,24 +6,39 @@
 :root{
   --sidebar-w:240px;
   --container:1480px;
-  --bg:#0f1215; --p1:#171a1f; --bd:#2a2f36; --text:#e5e7eb;
+  --bg:#0f1215; --p1:#171a1f; --bd:#2a2f36; --text:#ffffff;
   --hero-h:110px; --exclusive-row:120px; --gap:10px;
   --cardW:214px; --sixW: calc(6 * var(--cardW) + 5 * var(--gap));
 }
 *{ box-sizing:border-box }
-body{ background:var(--bg); color:var(--text); font-family:ui-sans-serif,system-ui,Inter }
+body{ background:var(--bg); color:var(--text); font-family:'Noto Sans KR', ui-sans-serif, system-ui, Inter }
 .ringed{ box-shadow:0 0 0 1px var(--bd) inset } .card{ border:1px solid var(--bd); background:var(--p1); border-radius:14px }
 
 header{ position:sticky; top:0; z-index:70; background:#13161B; border-bottom:1px solid var(--bd) }
 .header-inner{ max-width:var(--container); margin:0 auto; display:flex; align-items:center; gap:12px; height:72px; padding:0 12px; position:relative }
 .logo-box{ width:var(--sidebar-w); padding-left:0; display:flex; align-items:center; flex-shrink:0 }
-.logo{ width:100%; height:56px; border-radius:8px; background:linear-gradient(135deg,#2fd7ff,#00a3ff 45%,#0d365a); position:relative }
-.logo:before{ content:'EURO247'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:28px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.5) }
+.logo{ width:100%; height:56px; border-radius:8px; position:relative; background:transparent; display:flex; align-items:center; }
+.logo-img{ height:40px; width:auto; object-fit:contain; object-position:left center; display:block; margin-left:8px; image-rendering:auto; }
 .search{ flex:1; display:flex; align-items:center; gap:8px; height:44px; padding:0 12px; border-radius:12px; background:var(--p1) }
+
+
+/* Korean fonts */
+@font-face{
+  font-family:'EliceDigitalBaeum';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/EliceDigitalBaeum_Regular.woff') format('woff');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'EliceDigitalBaeum';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/EliceDigitalBaeum_Bold.woff') format('woff');
+  font-weight:700; font-style:normal; font-display:swap;
+}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap');
+.display-kor{ font-family:'EliceDigitalBaeum', 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif }
 
 /* EU button */
 .eu-wrap{ margin-left:auto; display:flex; align-items:center; gap:10px }
-.eu{ position:relative; width:70px; height:44px; border-radius:999px; padding:0 10px; display:flex; align-items:center; gap:6px; background:radial-gradient(120% 120% at 0% 0%, #6ddcff 0%, #0099f9 40%, #0d365a 100%); border:1px solid #66c8ff55; cursor:pointer }
+.eu{ position:relative; width:86px; height:44px; border-radius:999px; padding:0 12px; display:flex; align-items:center; gap:8px; background:linear-gradient(180deg,#0b3a55,#0a2b45 60%, #0a2035); border:1px solid #6bd3ff55; cursor:pointer; box-shadow:inset 0 1px 0 0 rgba(255,255,255,.25), 0 8px 18px rgba(0,0,0,.35) }
 .eu .E,.eu .U{ font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,.35) }
 .eu .link{ width:18px; height:18px; border-radius:9px; background:linear-gradient(180deg,#e8f6ff,#89d0ff); box-shadow: inset 0 0 0 2px #0b3a55; transform-origin:center; transition:transform .5s, translate .5s, opacity .5s }
 .eu.open .link{ transform:translateX(12px) rotate(90deg) } .eu.open .U{ transform:translateX(4px) }
@@ -32,7 +47,7 @@ header{ position:sticky; top:0; z-index:70; background:#13161B; border-bottom:1p
 .eu-dock{ margin-top:10px; margin-bottom:8px; }
 .w-six{ width:var(--sixW) }
 .eu-longbar{ position:relative; height:50px; border-radius:28px; border:1px solid #66c8ff66; background:linear-gradient(180deg, rgba(120,220,255,.12), rgba(20,40,60,.55)); overflow:hidden; display:flex; align-items:center; gap:10px; padding-left:14px; box-shadow:0 8px 24px rgba(0,0,0,.25);
-  transform-origin:right center; transform:scaleX(.2); opacity:0; visibility:hidden; transition:transform .8s cubic-bezier(.22,.8,.22,1), opacity .35s, visibility 0s .8s; }
+  transform-origin:right center; transform:scaleX(.2); opacity:0; visibility:hidden; transition:transform 1.2s cubic-bezier(.22,.8,.22,1), opacity .45s, visibility 0s 1.2s; }
 .eu-longbar.active{ transform:scaleX(1); opacity:1; visibility:visible; transition:transform .65s cubic-bezier(.22,.8,.22,1), opacity .35s }
 .eu-longbar::before{ content:''; position:absolute; inset:2px; border-radius:24px;
   background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.95) 12%, transparent 24%);
@@ -86,13 +101,13 @@ aside{ width:var(--sidebar-w); flex-shrink:0 }
 <body>
 <header>
   <div class="header-inner" id="headerInner">
-    <div class="logo-box"><div class="logo" aria-label="EURO247"></div></div>
+    <div class="logo-box"><div class="logo" aria-label="EURO247"><img class="logo-img" src="assets/logo.png" alt="EURO247"></div></div>
     <div class="search ringed">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8aa1b3" stroke-width="2"><path d="m21 21-4.3-4.3m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.7 11.7z"/></svg>
       <input placeholder="게임, 스튜디오, 카테고리 검색" style="flex:1; background:transparent; outline:none; color:#e5edf6" />
     </div>
     <div class="eu-wrap">
-      <div id="euBtn" class="eu" title="EU"><div class="E">E</div><div class="link"></div><div class="U">U</div></div>
+      <div id="euBtn" class="eu" title="EU"><div class="chip-dot"></div><div class="E">E</div><div class="link"></div><div class="U">U</div><div class="chip-dot"></div><div class="eu-glow"></div></div>
     </div>
   </div>
 </header>
@@ -157,9 +172,9 @@ aside{ width:var(--sidebar-w); flex-shrink:0 }
 
     <div class="card p-3 w-six">
       <div class="hero-grid">
-        <div class="card hero-card"><div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold">라이트닝 룰렛</div></div></div>
-        <div class="card hero-card"><div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold">드롭스 & 윈</div></div></div>
-        <div class="card hero-card"><div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold">토너먼트</div></div></div>
+        <div class="card hero-card"><div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold display-kor">라이트닝 룰렛</div></div></div>
+        <div class="card hero-card"><div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold display-kor">드롭스 & 윈</div></div></div>
+        <div class="card hero-card"><div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold display-kor">토너먼트</div></div></div>
       </div>
     </div>
 
@@ -172,13 +187,13 @@ aside{ width:var(--sidebar-w); flex-shrink:0 }
     <div class="section w-six">
       <div class="exclusive">
         <div class="card excl-big p-5">
-          <div class="text-lg font-bold">카지노</div>
+          <div class="text-lg font-bold display-kor">카지노</div>
           <p class="text-sm text-neutral-300 mt-1">저희가 개발한 게임, 라이브 카지노 및 슬롯에 빠져보세요.</p>
         </div>
-        <div class="card excl-small p-4"><div class="font-bold">스포츠</div><p class="text-xs text-neutral-400 mt-1">프리매치·라이브</p></div>
-        <div class="card excl-small p-4"><div class="font-bold">복권</div></div>
-        <div class="card excl-small p-4"><div class="font-bold">레이싱</div></div>
-        <div class="card excl-small p-4"><div class="font-bold">업다운</div></div>
+        <div class="card excl-small p-4"><div class="font-bold display-kor">스포츠</div><p class="text-xs text-neutral-400 mt-1">프리매치·라이브</p></div>
+        <div class="card excl-small p-4"><div class="font-bold display-kor">복권</div></div>
+        <div class="card excl-small p-4"><div class="font-bold display-kor">레이싱</div></div>
+        <div class="card excl-small p-4"><div class="font-bold display-kor">업다운</div></div>
       </div>
     </div>
 
@@ -273,7 +288,7 @@ function openEU(){
     chips.forEach((c,i)=> setTimeout(()=> c.classList.add('show'), i*540)); // 2배 느리게
     const total=(chips.length-1)*540 + 2000;
     setTimeout(()=> euLongbar.classList.remove('shine-on'), total);
-  }, 820); // 바 펼침을 조금 더 느리게 (0.8s)
+  }, 1220); // 바 펼침을 더 느리게 (1.2s)
 }
 function closeEU(){
   euOpen=false; euBtn.classList.remove('open');
