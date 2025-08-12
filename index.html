@@ -1,48 +1,47 @@
-<!doctype html><html lang="ko"><head>
+<!doctype html>
+<html lang="ko">
+<head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>EURO247 – Index (Mobile Wide + EU Shift)</title>
-<script src="https://cdn.tailwindcss.com"></script>/
-<style>/* === Mobile: 메인(노란 박스) 폭을 화면 오른쪽(빨간선)까지 확장 === */
+<meta name="viewport" id="vp" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>EURO247 – Index (Mobile=Desktop UI, Neon-35)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+// === 모바일에서도 '데스크탑 사이트'와 같은 스케일 강제 ===
+(function(){
+  const vp=document.getElementById('vp');
+  function applyDesktopScale(){
+    const w=window.screen.width; // 디바이스 가로 CSS 픽셀
+    if(w<=820){
+      const target=1280; // 데스크탑 기준 가로폭
+      const scale=(w/target);
+      vp.setAttribute('content',`width=${target}, initial-scale=${scale.toFixed(3)}, maximum-scale=${scale.toFixed(3)}, minimum-scale=${scale.toFixed(3)}, user-scalable=no, viewport-fit=cover`);
+      document.documentElement.classList.add('mobile-desktop');
+    }else{
+      vp.setAttribute('content','width=device-width, initial-scale=1, viewport-fit=cover');
+      document.documentElement.classList.remove('mobile-desktop');
+    }
+  }
+  applyDesktopScale();
+  window.addEventListener('orientationchange',()=>setTimeout(applyDesktopScale,300));
+  window.addEventListener('resize',()=>{ if(window.innerWidth<=820 || document.documentElement.classList.contains('mobile-desktop')) applyDesktopScale(); });
+})();
+</script>
+<style>
+/* === 모바일 레이아웃: 사이드바는 작게, 메인은 끝까지 === */
 @media (max-width: 768px){
-  :root{
-    --container: calc(100vw - var(--sidebar-w) - 8px); /* 8px = layout gap */
-  }
-
-  .layout{
-    padding-right: 4px;   /* 0~8px에서 미세 조정 가능 */
-    gap: 8px;
-  }
-
-  .layout > main,
-  main,
-  .main{
-    min-width: 0;
-    width: var(--container) !important;
-    max-width: var(--container) !important;
-  }
-
-  .hero-grid,
-  .hero-wrap,
-  .six-grid,
-  .exclusive,
-  .grid-games,
-  .section,
-  .section > .card,
-  .cards,
-  .tiles,
-  .games{
-    width: 100% !important;
-  }
+  :root{ --container: calc(100vw - var(--sidebar-w) - 8px); }
+  .layout{ padding-right:4px; gap:8px; }
+  .layout > main, main, .main{ min-width:0; width:var(--container)!important; max-width:var(--container)!important; }
+  .hero-grid,.hero-wrap,.six-grid,.exclusive,.grid-games,.section,.section>.card,.cards,.tiles,.games{ width:100%!important; }
 }
 
-html, body { overflow-x: hidden; }
-
+html,body{overflow-x:hidden}
 :root{
   --sidebar-w:240px;                 /* 기본 사이드바 폭 */
   --container:1480px;
   --bg:#0f1215; --p1:#171a1f; --bd:#2a2f36; --text:#ffffff;
   --hero-h:110px; --exclusive-row:120px; --gap:10px;
+  --neon-period:.55s;               /* 클릭 네온 주기 (느리게) */
 }
 *{box-sizing:border-box} body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',ui-sans-serif,system-ui,Inter}
 .ringed{box-shadow:0 0 0 1px var(--bd) inset} .card{border:1px solid var(--bd);background:var(--p1);border-radius:14px}
@@ -137,28 +136,20 @@ aside{width:var(--sidebar-w);flex-shrink:0}
 .six-grid .card:hover::after{opacity:.48;animation-duration:4.2s}
 @keyframes neonSpin{to{transform:rotate(360deg)}}
 
-/* ===== Click FX ===== */
-.click-flash{box-shadow:0 0 0 1px #87d6ff inset,0 0 24px #87d6ff55;animation:flashGlow 1.4s ease-out}
-@keyframes flashGlow{from{box-shadow:0 0 0 1px #87d6ff inset,0 0 0 #87d6ff00}to{box-shadow:0 0 0 1px #87d6ff00 inset,0 0 0 #87d6ff00}}
+/* ===== Click FX (35회 네온 번쩍) ===== */
+/* 기존 click-flash 단발 대신 35회 펄스 */
+.neon-35{animation:neonPulse var(--neon-period) ease-in-out 35}
+@keyframes neonPulse{
+  0%,100%{box-shadow:0 0 0 1px #87d6ff00 inset,0 0 0 #87d6ff00}
+  50%{box-shadow:0 0 0 1px #aaf0ff inset,0 0 18px #87d6ff80,0 0 30px #87d6ff40}
+}
 .ripple{position:absolute;border-radius:9999px;transform:translate(-50%,-50%) scale(0);opacity:.85;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.6) 0%,rgba(120,220,255,.35) 40%,transparent 70%);animation:rip 1.3s ease-out forwards;mix-blend-mode:screen;filter:blur(.5px)}
 @keyframes rip{to{transform:translate(-50%,-50%) scale(22);opacity:0}}
 
 /* ===== Responsive – 모바일도 데스크탑 느낌 ===== */
-@media (max-width:1200px){
-  .six-grid,.grid-games{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media (max-width:640px){
-  :root{--sidebar-w:132px}
-  .layout{gap:12px}
-  .menu-list{padding:8px}
-  .menu-pill{height:32px;font-size:.82rem;margin-bottom:7px}
-}
-@media (max-width:520px){
-  :root{--sidebar-w:120px}
-  .header-inner{height:64px}
-  .menu-pill{height:30px;font-size:.78rem}
-  .layout{gap:10px}
-}
+@media (max-width:1200px){ .six-grid,.grid-games{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:640px){ :root{--sidebar-w:132px} .layout{gap:12px} .menu-list{padding:8px} .menu-pill{height:32px;font-size:.82rem;margin-bottom:7px} }
+@media (max-width:520px){ :root{--sidebar-w:120px} .header-inner{height:64px} .menu-pill{height:30px;font-size:.78rem} .layout{gap:10px} }
 
 /* ===== EU 열림 시 메인 살짝 밀림 ===== */
 #mainShift{transition:transform 1s cubic-bezier(.22,.8,.22,1)}
@@ -168,7 +159,7 @@ body.eu-open #mainShift{transform:translateY(62px)}
 <body>
 <header>
   <div class="header-inner">
-    <div class="logo-box"><img class="logo-img" src="assets/logo_euro247.png?v=20250812d" alt="EURO247"></div>
+    <div class="logo-box"><img class="logo-img" src="assets/logo_euro247.png?v=20250813a" alt="EURO247"></div>
     <div class="search ringed">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8aa1b3" stroke-width="2"><path d="m21 21-4.3-4.3m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.7 11.7z"/></svg>
       <input placeholder="게임, 스튜디오, 카테고리 검색" style="flex:1;background:transparent;outline:none;color:#e5edf6"/>
@@ -234,15 +225,15 @@ body.eu-open #mainShift{transform:translateY(62px)}
       <div class="card p-3">
         <div class="hero-grid">
           <div class="card hero-card">
-            <img src="assets/hero_left.jpg?v=20250812d" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
+            <img src="assets/hero_left.jpg?v=20250813a" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
             <div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold display-kor">라이트닝 룰렛</div></div>
           </div>
           <div class="card hero-card">
-            <img src="assets/hero_center.jpg?v=20250812d" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
+            <img src="assets/hero_center.jpg?v=20250813a" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
             <div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold display-kor">드롭스 & 윈</div></div>
           </div>
           <div class="card hero-card">
-            <img src="assets/hero_right.jpg?v=20250812d" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
+            <img src="assets/hero_right.jpg?v=20250813a" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
             <div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">스페셜</div><div class="font-bold display-kor">토너먼트</div></div>
           </div>
         </div>
@@ -251,12 +242,12 @@ body.eu-open #mainShift{transform:translateY(62px)}
       <!-- Top 6 Slots -->
       <div class="section">
         <div class="six-grid">
-          <div class="card overflow-hidden"><img src="assets/slots/slot_01.jpg?v=20250812d" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 01</div></div>
-          <div class="card overflow-hidden"><img src="assets/slots/slot_02.jpg?v=20250812d" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 02</div></div>
-          <div class="card overflow-hidden"><img src="assets/slots/slot_03.jpg?v=20250812d" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 03</div></div>
-          <div class="card overflow-hidden"><img src="assets/slots/slot_04.jpg?v=20250812d" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 04</div></div>
-          <div class="card overflow-hidden"><img src="assets/slots/slot_05.jpg?v=20250812d" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 05</div></div>
-          <div class="card overflow-hidden"><img src="assets/slots/slot_06.jpg?v=20250812d" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 06</div></div>
+          <div class="card overflow-hidden"><img src="assets/slots/slot_01.jpg?v=20250813a" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 01</div></div>
+          <div class="card overflow-hidden"><img src="assets/slots/slot_02.jpg?v=20250813a" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 02</div></div>
+          <div class="card overflow-hidden"><img src="assets/slots/slot_03.jpg?v=20250813a" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 03</div></div>
+          <div class="card overflow-hidden"><img src="assets/slots/slot_04.jpg?v=20250813a" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 04</div></div>
+          <div class="card overflow-hidden"><img src="assets/slots/slot_05.jpg?v=20250813a" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 05</div></div>
+          <div class="card overflow-hidden"><img src="assets/slots/slot_06.jpg?v=20250813a" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"><div class="p-2 text-xs">Super Spin 06</div></div>
         </div>
       </div>
 
@@ -362,15 +353,15 @@ euBtn.addEventListener('click', ()=> euOpen ? closeEU() : openEU());
 
 /* ===== Modal (데모) ===== */
 const modal=document.getElementById('modal');
-document.getElementById('modalClose').onclick=()=>modal.classList.remove('show');
-document.getElementById('modalOk').onclick=()=>modal.classList.remove('show');
+(document.getElementById('modalClose')||{}).onclick=()=>modal.classList.remove('show');
+(document.getElementById('modalOk')||{}).onclick=()=>modal.classList.remove('show');
 actionsWrap.addEventListener('click', e=>{
   const b=e.target.closest('.eu-chip'); if(!b) return;
   const act=b.dataset.act, title=act==='deposit'?'입금':act==='withdraw'?'출금':b.textContent.trim();
   if(act==='deposit'||act==='withdraw'){ document.getElementById('modalTitle').textContent=title; document.getElementById('modalBody').textContent='데모 모달입니다.'; modal.classList.add('show') }
 });
 
-/* ===== 카드 틸트 & 클릭 리플 ===== */
+/* ===== 카드 틸트 ===== */
 (()=>{ const grid=document.querySelector('.grid-games'); if(!grid) return; const max=7;
   grid.addEventListener('mousemove', e=>{
     const card=e.target.closest('.grid-games .card'); if(!card) return;
@@ -380,17 +371,24 @@ actionsWrap.addEventListener('click', e=>{
   });
   grid.addEventListener('mouseleave', ()=> grid.querySelectorAll('.card').forEach(c=>c.style.transform=''));
 })();
+
+/* ===== 클릭 리플 + 35회 네온 펄스 ===== */
 function attachClickFX(sel){
   document.querySelectorAll(sel).forEach(el=>{
     if(getComputedStyle(el).position==='static') el.style.position='relative';
     el.addEventListener('click', e=>{
+      // 리플
       const r=document.createElement('span'); r.className='ripple';
       const rect=el.getBoundingClientRect(); r.style.left=(e.clientX-rect.left)+'px'; r.style.top=(e.clientY-rect.top)+'px';
       el.appendChild(r); setTimeout(()=>r.remove(),1400);
-      el.classList.add('click-flash'); setTimeout(()=>el.classList.remove('click-flash'),1400);
+      // 네온 35회
+      el.classList.add('neon-35');
+      function cleanup(){ el.classList.remove('neon-35'); el.removeEventListener('animationend',cleanup); }
+      el.addEventListener('animationend', cleanup);
     });
   });
 }
-attachClickFX('.menu-pill, .exclusive .card, .six-grid .card, .grid-games .card');
+attachClickFX('button, .menu-pill, .eu, .eu-chip, .exclusive .card, .six-grid .card, .grid-games .card');
 </script>
-</body></html>
+</body>
+</html>
