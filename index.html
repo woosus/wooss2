@@ -2,7 +2,47 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>EURO247 – Index (Mobile Wide + EU Shift)</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>/* === Mobile: 메인(노란 박스) 폭을 화면 오른쪽(빨간선)까지 확장 === */
+@media (max-width: 768px){
+  /* 컨테이너 폭을 '전체 화면 - 사이드바 - 약간의 간격'으로 재계산 */
+  :root{
+    /* 사이드바 폭은 현재 240px 사용 중이므로 그대로 씀. 필요하면 숫자만 조정 */
+    --container: calc(100vw - var(--sidebar-w) - 8px); /* 8px = layout gap */
+  }
+
+  /* 오른쪽 내부 여백/간격 조금만 남기고 최대한 꽉 차게 */
+  .layout{
+    padding-right: 4px;   /* 필요 시 0~8px 사이에서 미세 조정 가능 */
+    gap: 8px;             /* 레이아웃 간격. 기존보다 살짝 타이트 */
+  }
+
+  /* 메인 영역을 새 컨테이너 폭으로 강제 확장 */
+  .layout > main,
+  main,
+  .main{
+    min-width: 0;
+    width: var(--container) !important;
+    max-width: var(--container) !important;
+  }
+
+  /* 내부 그리드/섹션이 새 폭을 100% 활용하도록 */
+  .hero-grid,
+  .hero-wrap,
+  .six-grid,
+  .exclusive,
+  .grid-games,
+  .section,
+  .section > .card,
+  .cards,
+  .tiles,
+  .games{
+    width: 100% !important;
+  }
+}
+
+/* 혹시 가로 스크롤 생기는 브라우저 대비 */
+html, body { overflow-x: hidden; }
+
 <style>
 :root{
   --sidebar-w:240px;                 /* 기본 사이드바 폭 */
