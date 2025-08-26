@@ -254,7 +254,7 @@ body.eu-open #mainShift{transform:translateY(62px)}
       <!-- Exclusive 6 -->
       <div class="section">
         <div class="exclusive">
-          <div class="card excl-big p-5"><div class="text-lg font-bold display-kor">토너먼트로비</div><p class="text-sm text-neutral-300 mt-1">-1주년기념슈퍼바운티대회-</p></div>
+          <div id="tournament-lobby-btn" class="card excl-big p-5"><div class="text-lg font-bold display-kor">토너먼트로비</div><p class="text-sm text-neutral-300 mt-1">-진행중인 토너 로비-</p></div>
           <div class="card excl-small p-4"><div class="font-bold display-kor">토너먼트</div><p class="text-xs text-neutral-400 mt-1">저희가 개발한 홀덤게임, 구라가 있는 확실한 게임에 빠져보세요</p></div>
           <div class="card excl-small p-4"><div class="font-bold display-kor">바둑이</div></div>
           <div class="card excl-small p-4"><div class="font-bold display-kor">7포커</div></div>
@@ -384,5 +384,68 @@ function attachClickFX(sel){
 }
 attachClickFX('button, .menu-pill, .eu, .eu-chip, .exclusive .card, .six-grid .card, .grid-games .card');
 </script>
+
+<!-- TOURNAMENT LOBBY MODAL INJECTED -->
+<style>
+/* Tournament Lobby Modal */
+.modal-eu { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.72); }
+.modal-eu .wrap { width:min(1100px,92vw); margin:4vh auto; background:#161a24; border:1px solid #2a2f36; border-radius:14px; box-shadow:0 0 30px rgba(0,255,255,.35); }
+.modal-eu .hd { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid #232834; }
+.modal-eu .title { font-weight:800; font-size:18px; color:#e5e7eb }
+.modal-eu .close { background:transparent; border:0; color:#94a3b8; font-size:20px; cursor:pointer }
+.modal-eu .body { padding:14px 16px 18px }
+.tour-table { width:100%; border-collapse:collapse; color:#e5e7eb; font-size:14px }
+.tour-table th, .tour-table td { border:1px solid #2b3240; padding:10px 8px; text-align:center }
+.tour-table th { background:#1f2532; font-weight:700 }
+.tour-table tr:nth-child(even) td { background:#151a22 }
+@media (max-width:680px) {
+  .tour-table th:nth-child(4), .tour-table td:nth-child(4),
+  .tour-table th:nth-child(5), .tour-table td:nth-child(5) { display:none }
+}
+</style>
+
+<div id="tournament-lobby-modal" class="modal-eu" role="dialog" aria-modal="true" aria-labelledby="tourneyTitle">
+  <div class="wrap">
+    <div class="hd">
+      <div id="tourneyTitle" class="title">토너먼트 로비</div>
+      <button class="close" id="tourneyClose">✕</button>
+    </div>
+    <div class="body">
+      <table class="tour-table">
+        <thead>
+          <tr>
+            <th>인원</th><th>블라인드</th><th>바인인</th><th>테이블</th><th>플레이어</th><th>배드빗 잭팟</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>6인</td><td>1000/2000</td><td>5만</td><td>7</td><td>29</td><td>249,379,528</td></tr>
+          <tr><td>6인</td><td>200/400</td><td>100만</td><td>5</td><td>19</td><td>2,493,795,284</td></tr>
+          <tr><td>6인</td><td>500/1000</td><td>1000만</td><td>6</td><td>27</td><td>24,937,952,848</td></tr>
+          <tr><td>6인</td><td>1000/2000</td><td>5000만</td><td>1</td><td>0</td><td>99,751,811,393</td></tr>
+          <tr><td>6인</td><td>2000/4000</td><td>1억</td><td>5</td><td>24</td><td>249,379,528,483</td></tr>
+          <tr><td>6인</td><td>5000/10000</td><td>4억</td><td>5</td><td>24</td><td>748,138,585,450</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function $id(id){ return document.getElementById(id); }
+  document.addEventListener('DOMContentLoaded', function(){
+    var btn = $id('tournament-lobby-btn');
+    var modal = $id('tournament-lobby-modal');
+    var close = $id('tourneyClose');
+    if(!btn || !modal || !close) return;
+    btn.style.cursor = 'pointer';
+    btn.addEventListener('click', function(){ modal.style.display = 'block'; document.body.style.overflow='hidden'; });
+    close.addEventListener('click', function(){ modal.style.display = 'none'; document.body.style.overflow=''; });
+    modal.addEventListener('click', function(e){ if(e.target === modal){ modal.style.display = 'none'; document.body.style.overflow=''; } });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ modal.style.display='none'; document.body.style.overflow=''; } });
+  });
+})();
+</script>
+
 </body>
 </html>
