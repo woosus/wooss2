@@ -1,0 +1,19 @@
+name: Auto-add automerge label
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+permissions:
+  pull-requests: write
+jobs:
+  add-label:
+    # 드래프트 PR이거나 'hold' 라벨이 붙은 경우에는 자동라벨링 스킵(비상 멈춤용)
+    if: ${{ !github.event.pull_request.draft && !contains(join(github.event.pull_request.labels.*.name), 'hold') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            await github.rest.issues.addLabels({ owner, repo, issue_number, labels: ['automerge'] });
