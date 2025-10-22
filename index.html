@@ -44,11 +44,6 @@ header{position:sticky;top:0;z-index:70;background:#13161B;border-bottom:1px sol
 .logo-box{width:var(--sidebar-w);display:flex;align-items:center}
 .logo-img{height:70px}
 .search{flex:1;display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;border-radius:12px;background:var(--p1)}
-.eu-btn{
-  height:44px;padding:0 16px;border-radius:999px;border:1px solid #6bd3ff55;
-  background:linear-gradient(180deg,#0b3a55,#0a2b45 60%,#0a2035);
-  color:#fff;font-weight:900;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px rgba(0,0,0,.35);
-}
 
 /* 레이아웃 */
 .layout{max-width:var(--container);margin:0 auto;display:flex;gap:16px;padding:0 12px}
@@ -65,11 +60,13 @@ aside{width:var(--sidebar-w);flex-shrink:0}
 .menu-pill.show{opacity:1;transform:translateY(0)}
 .menu-pill:hover{border-color:#67e8f9aa;box-shadow:0 0 0 1px #67e8f955 inset,0 10px 20px rgba(0,0,0,.25)}
 
-/* 가입/로그인/VIP */
+/* 가입/로그인/VIP/연계 */
 .btn-row{display:flex;gap:8px;margin-bottom:8px}
 .btn-half{flex:1;height:40px;border-radius:10px;border:1px solid #2a2f36;background:linear-gradient(180deg,#1a2b45,#132237);font-weight:800}
 .btn-half.login{background:linear-gradient(180deg,#2b1733,#231327)}
-.btn-vip{width:100%;height:40px;border-radius:10px;border:1px solid #2a2f36;background:linear-gradient(180deg,#2d3a1c,#1e2812);font-weight:900}
+.btn-vip,.btn-link{width:100%;height:40px;border-radius:10px;border:1px solid #2a2f36;font-weight:900}
+.btn-vip{background:linear-gradient(180deg,#2d3a1c,#1e2812)}
+.btn-link{background:linear-gradient(180deg,#153954,#0f2a42)}
 
 /* 섹션 */
 .section{margin-top:18px}
@@ -93,7 +90,8 @@ aside{width:var(--sidebar-w);flex-shrink:0}
 
 /* 4소켓 이미지 + 모서리 제목 */
 .promo-card{padding:0;cursor:pointer;touch-action:manipulation}
-.promo-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.95)}
+.promo-holder{position:absolute;inset:0;overflow:hidden;border-radius:14px}
+.promo-holder img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.95)}
 .promo-title{position:absolute;font-weight:800;font-size:16px;padding:10px 12px;text-shadow:0 2px 10px rgba(0,0,0,.6)}
 .promo-title.tl{top:8px;left:12px}
 .promo-title.tr{top:8px;right:12px;text-align:right}
@@ -107,11 +105,14 @@ aside{width:var(--sidebar-w);flex-shrink:0}
 .overlay .panel{position:absolute;width:0;height:0;background:#161a24;border:1px solid #2a2f36;border-radius:14px;transform-origin:0 0;box-shadow:0 18px 60px rgba(0,0,0,.35);overflow:hidden}
 .overlay.show{pointer-events:auto}
 .overlay .content{padding:16px}
-/* 닫기 버튼: 우측 상단 작은 크기 */
-.overlay .close{
-  position:absolute;right:12px;top:10px;
-  padding:.35rem .6rem;border-radius:.5rem;background:#0ea5e9;color:#fff;font-weight:700;
-}
+.overlay .close{position:absolute;right:12px;top:10px;padding:.35rem .6rem;border-radius:.5rem;background:#0ea5e9;color:#fff;font-weight:700}
+
+/* 가입 모달 */
+.join-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:10000}
+.join-modal .win{width:min(560px,92vw);background:#12161c;border:1px solid #2a2f36;border-radius:14px;padding:18px}
+.join-modal .hd{display:flex;align-items:center;justify-content:space-between}
+.join-modal .title{font-weight:800}
+.join-modal .close{color:#cbd5e1}
 </style>
 </head>
 <body>
@@ -122,13 +123,12 @@ aside{width:var(--sidebar-w);flex-shrink:0}
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8aa1b3" stroke-width="2"><path d="m21 21-4.3-4.3m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.7 11.7z"/></svg>
       <input placeholder="게임, 스튜디오, 카테고리 검색" style="flex:1;background:transparent;outline:none;color:#e5edf6"/>
     </div>
-    <!-- 우측 VIP 버튼은 삭제됨 -->
   </div>
 </header>
 
 <div class="layout">
   <aside>
-    <!-- 가입/로그인 + VIP(좌측) -->
+    <!-- 가입/로그인 + VIP + 가입창 연계 -->
     <div class="sidebox open" id="memberBox">
       <div class="head"><span>회원</span><span class="caret">⌄</span></div>
       <div class="body">
@@ -137,7 +137,8 @@ aside{width:var(--sidebar-w);flex-shrink:0}
             <button class="btn-half"  id="btnJoin">가입</button>
             <button class="btn-half login">로그인</button>
           </div>
-          <button class="btn-vip" id="btnVip">VIP 호출</button>
+          <button class="btn-vip"  id="btnVip">VIP 호출</button>
+          <button class="btn-link" id="btnLinkJoin">가입창 연계</button>
         </div>
       </div>
     </div>
@@ -184,30 +185,21 @@ aside{width:var(--sidebar-w);flex-shrink:0}
 
   <main class="flex-1 pb-16">
     <div id="mainShift">
-      <!-- 히어로 -->
-      <div id="heroWrap" style="height:auto">
+      <!-- 히어로 (기본: 접힘) -->
+      <div id="heroWrap" style="height:0;overflow:hidden">
         <div class="card p-3">
           <div class="hero-grid">
             <div class="card hero-card">
-              <img src="assets/hero_left.jpg" alt="Jayme Sun – Executive Host" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
-              <div class="absolute left-4 bottom-3">
-                <div class="text-xs text-neutral-300">Jayme Sun (제이미 선)</div>
-                <div class="name-line font-bold">Executive Host</div>
-              </div>
+              <img src="assets/hero_left.jpg" alt="Jayme Sun (제이미 선) — Executive Host" title="Jayme Sun (제이미 선) | Executive Host" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
+              <div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">Jayme Sun (제이미 선)</div><div class="name-line font-bold">Executive Host</div></div>
             </div>
             <div class="card hero-card">
-              <img src="assets/hero_center.jpg" alt="Tom Woo – Mid-level Host" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
-              <div class="absolute left-4 bottom-3">
-                <div class="text-xs text-neutral-300">Tom Woo (탐 우)</div>
-                <div class="name-line font-bold">Mid-level Host</div>
-              </div>
+              <img src="assets/hero_center.jpg" alt="Tom Woo (탐 우) — Mid-level Host" title="Tom Woo (탐 우) | Mid-level Host" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
+              <div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">Tom Woo (탐 우)</div><div class="name-line font-bold">Mid-level Host</div></div>
             </div>
             <div class="card hero-card">
-              <img src="assets/hero_right.jpg" alt="Jay Hong – Executive Host" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
-              <div class="absolute left-4 bottom-3">
-                <div class="text-xs text-neutral-300">Jay Hong (재 홍)</div>
-                <div class="name-line font-bold">Executive Host</div>
-              </div>
+              <img src="assets/hero_right.jpg" alt="Jay Hong (재 홍) — Executive Host" title="Jay Hong (재 홍) | Executive Host" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.style.display='none'">
+              <div class="absolute left-4 bottom-3"><div class="text-xs text-neutral-300">Jay Hong (재 홍)</div><div class="name-line font-bold">Executive Host</div></div>
             </div>
           </div>
         </div>
@@ -216,24 +208,23 @@ aside{width:var(--sidebar-w);flex-shrink:0}
       <!-- 프로모션 그룹 -->
       <div id="promoGroup" class="section">
         <div class="exclusive">
-          <button id="promo-big" class="card excl-big p-5" style="text-align:left;position:relative;cursor:pointer">
-            <div class="text-lg font-bold">퀴즈만점!쿠폰만점!</div>
+          <!-- 빅1: 이미지 + 가입 팝업 연결 -->
+          <button id="promo-big" class="card excl-big" data-img="PRO_BIG" style="position:relative;cursor:pointer">
+            <div class="promo-holder"></div>
+            <div class="p-5 text-left"><div class="text-lg font-bold">퀴즈만점!쿠폰만점!</div></div>
           </button>
-          <button class="card excl-small promo-card" data-go="#page-official">
-            <div class="promo-bg" style="background-image:url('assets/PRO1.jpg')"></div>
-            <div class="promo-title tl">공식프로모션</div>
+          <!-- 4소켓: 컨테이너 트랜스폼 + 이미지 자동 로더 -->
+          <button class="card excl-small promo-card" data-go="#page-official" data-img="PRO1">
+            <div class="promo-holder"></div><div class="promo-title tl">공식프로모션</div>
           </button>
-          <button class="card excl-small promo-card" data-go="#page-partner">
-            <div class="promo-bg" style="background-image:url('assets/PRO2.jpg')"></div>
-            <div class="promo-title tr">파트너프로모션</div>
+          <button class="card excl-small promo-card" data-go="#page-partner" data-img="PRO2">
+            <div class="promo-holder"></div><div class="promo-title tr">파트너프로모션</div>
           </button>
-          <button class="card excl-small promo-card" data-go="#page-now">
-            <div class="promo-bg" style="background-image:url('assets/PRO3.jpg')"></div>
-            <div class="promo-title bl">지금진행중</div>
+          <button class="card excl-small promo-card" data-go="#page-now" data-img="PRO3">
+            <div class="promo-holder"></div><div class="promo-title bl">지금진행중</div>
           </button>
-          <button class="card excl-small promo-card" data-go="#page-join">
-            <div class="promo-bg" style="background-image:url('assets/PRO4.jpg')"></div>
-            <div class="promo-title br">프로모션참여</div>
+          <button class="card excl-small promo-card" data-go="#page-join" data-img="PRO4">
+            <div class="promo-holder"></div><div class="promo-title br">프로모션참여</div>
           </button>
         </div>
       </div>
@@ -265,21 +256,42 @@ aside{width:var(--sidebar-w);flex-shrink:0}
 <div id="overlay" class="overlay" hidden>
   <div class="scrim"></div>
   <div class="panel">
-    <!-- 버튼에서 class="overlay" 제거! (세로로 길어지던 원인) -->
     <button id="btnClose" class="close">닫기</button>
     <div id="overlayBody" class="content"></div>
   </div>
 </div>
 
 <!-- 가입/완료 모달 -->
-<div id="joinModal" class="join-modal"><div class="win"><div class="hd"><div class="title">가입창</div><button id="joinClose" class="close">✕</button></div><div class="mt-3 grid gap-3"><input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="아이디"><input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="성함"><input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="비밀번호" type="password"><input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="연락처"><button id="joinSubmit" class="px-4 py-3 rounded-md bg-[#0ea5e9] text-white">가입완료</button></div></div></div>
-<div id="joinDone" class="join-modal"><div class="win"><div class="hd"><div class="title">가입 완료</div><button id="doneClose" class="close">✕</button></div><div class="mt-4 text-neutral-200 space-y-4"><a href="https://선물세개.com" class="text-lg font-bold" target="_blank" rel="noopener">www.선물세개.com</a><div>가입완료하신분만! 1분선호도체크하고</div><div class="flex justify-center"><button id="btnCoupon" class="px-8 py-4 rounded-md border border-yellow-400 text-yellow-200 text-xl">쿠폰받기</button></div><div class="text-xs text-neutral-400">*원치 않으시면 패스하셔도 됩니다.</div></div></div></div>
+<div id="joinModal" class="join-modal">
+  <div class="win">
+    <div class="hd"><div class="title">가입창</div><button id="joinClose" class="close">✕</button></div>
+    <div class="mt-3 grid gap-3">
+      <input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="아이디">
+      <input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="성함">
+      <input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="비밀번호" type="password">
+      <input class="px-3 py-2 rounded-md bg-[#0f1318] border border-[#2a2f36]" placeholder="연락처">
+      <button id="joinSubmit" class="px-4 py-3 rounded-md bg-[#0ea5e9] text-white">가입완료</button>
+    </div>
+  </div>
+</div>
+
+<div id="joinDone" class="join-modal">
+  <div class="win">
+    <div class="hd"><div class="title">가입 완료</div><button id="doneClose" class="close">✕</button></div>
+    <div class="mt-4 text-neutral-200 space-y-4">
+      <a href="https://선물세개.com" class="text-2xl font-bold block text-center" target="_blank" rel="noopener">www.선물세개.com</a>
+      <div class="text-center">가입완료하신분만! 1분선호도체크하고</div>
+      <div class="flex justify-center"><button id="btnCoupon" class="px-8 py-4 rounded-md border border-yellow-400 text-yellow-200 text-xl">쿠폰받기</button></div>
+      <div class="text-xs text-neutral-400 text-center">*원치 않으시면 패스하셔도 됩니다.</div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* 좌측 아코디언 + 버튼 페이드인 */
 document.querySelectorAll('.sidebox').forEach(box=>{
   const head=box.querySelector('.head'), body=box.querySelector('.body');
-  const pills=[...box.querySelectorAll('.menu-pill,.btn-half,.btn-vip')];
+  const pills=[...box.querySelectorAll('.menu-pill,.btn-half,.btn-vip,.btn-link')];
   function autoH(){ body.style.height='auto'; body.style.height=body.scrollHeight+'px' }
   if(box.classList.contains('open')){ autoH(); pills.forEach((p,i)=>setTimeout(()=>p.classList.add('show'), i*80)) }
   head.addEventListener('click', ()=>{
@@ -313,7 +325,7 @@ function alignHero(){
 addEventListener('load',alignHero);
 addEventListener('resize',alignHero);
 
-/* 히어로 토글 */
+/* 히어로 토글 (기본: 접힘) */
 function collapseHero(){
   const h=heroWrap.scrollHeight;
   heroWrap.style.height=h+'px'; heroWrap.offsetHeight;
@@ -327,11 +339,10 @@ function expandHero(){
   heroWrap.style.height=heroWrap.scrollHeight+'px';
   heroWrap.addEventListener('transitionend', function f(){ heroWrap.style.transition=''; heroWrap.style.height='auto'; heroWrap.removeEventListener('transitionend',f) }, {once:true});
 }
-
-/* 좌측 VIP 호출 버튼 = 히어로 토글 */
+/* 좌측 VIP 호출 버튼으로 제어, 초기 상태 = 닫힘 */
 (() => {
   const btn=document.getElementById('btnVip'); if(!btn) return;
-  let openState=true; // 기본 펼침
+  let openState=false; // 기본 접힘
   btn.addEventListener('click',()=>{ if(openState) collapseHero(); else expandHero(); openState=!openState; });
 })();
 
@@ -394,7 +405,7 @@ document.querySelectorAll('#promoGroup .promo-card').forEach(card=>{
 
 /* 좌측 하위분류: 슬라이드+페이드 */
 function slideInFromLeft(title){
-  if(busy||open){} 
+  if(busy||open){}
   const fake=document.createElement('section'); fake.className='content';
   fake.innerHTML=`<h2>${title}</h2><p class="text-sm text-neutral-300">콘텐츠 준비중</p>`;
   bodyEl.innerHTML=''; bodyEl.appendChild(fake);
@@ -408,12 +419,28 @@ document.querySelectorAll('#boxCat .menu-pill, #boxPromo .menu-pill, #boxCF .men
   p.addEventListener('click',()=>slideInFromLeft(p.dataset.cat||p.textContent.trim()));
 });
 
-/* 가입 폼 & 완료 */
+/* ====== 이미지 로더: PRO*, PRO_BIG (PNG/JPG 대소문자 모두) ====== */
+function loadFirstAvailable(el, base){
+  const exts=['.png','.PNG','.jpg','.JPG','.jpeg','.JPEG'];
+  let idx=0; const img=new Image();
+  img.onload=()=>{ img.className='w-full h-full object-cover'; el.appendChild(img); };
+  img.onerror=()=>{ idx++; if(idx<exts.length){ img.src=`assets/${base}${exts[idx]}`; } };
+  img.src=`assets/${base}${exts[idx]}`;
+}
+document.querySelectorAll('[data-img]').forEach(card=>{
+  const holder=card.querySelector('.promo-holder'); if(holder) loadFirstAvailable(holder, card.dataset.img);
+});
+
+/* 빅 소켓 → 가입 팝업, ‘가입창 연계’ 버튼 → 가입 팝업, ‘가입’ 버튼 → 가입 폼 */
 const joinModal=document.getElementById('joinModal');
-const joinDone=document.getElementById('joinDone');
+const joinDone =document.getElementById('joinDone');
 function openModal(m){ m.style.display='flex'; document.body.style.overflow='hidden'; }
 function closeModal(m){ m.style.display='none'; document.body.style.overflow=''; }
-document.getElementById('promo-big').addEventListener('click',()=>openModal(joinModal));
+
+document.getElementById('promo-big').addEventListener('click',()=>openModal(joinDone)); // 빅소켓=연계 팝업
+document.getElementById('btnLinkJoin').addEventListener('click',()=>openModal(joinDone)); // 가입창 연계 버튼
+document.getElementById('btnJoin').addEventListener('click',()=>openModal(joinModal));    // 가입=가입 폼
+
 document.getElementById('joinClose').addEventListener('click',()=>closeModal(joinModal));
 document.getElementById('joinSubmit').addEventListener('click',()=>{ closeModal(joinModal); openModal(joinDone);});
 document.getElementById('doneClose').addEventListener('click',()=>closeModal(joinDone));
