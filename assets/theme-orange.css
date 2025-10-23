@@ -1,0 +1,126 @@
+/* ===== Theme · Orange & White (wooss2) ===== */
+:root{
+  /* Base */
+  --bg-0:#0B0E12;     /* 페이지 배경(다크 유지) */
+  --bg-1:#121720;     /* 카드/사이드 */
+  --bg-2:#171D29;     /* 입력박스/서브 */
+  --border:#263143;
+  --shadow:rgba(0,0,0,.45);
+
+  /* Text */
+  --text-0:#FFFFFF;
+  --text-1:#C7D1E1;
+
+  /* Accent (Orange) */
+  --accent:#FF7A00;    /* 주오렌지 */
+  --accent-2:#FFB347;  /* 밝은 오렌지 */
+  --accent-3:#FFD08A;  /* 하이라이트 */
+  --white:#FFFFFF;
+}
+
+/* 글로벌 */
+html,body{background:var(--bg-0); color:var(--text-0);}
+a{color:var(--accent-2);}
+hr{border-color:var(--border);}
+::selection{background:var(--accent-2); color:#111;}
+
+/* 카드/패널 */
+.card, .panel, .box, .tile, [class*="card"], [class*="panel"]{
+  background:var(--bg-1)!important;
+  border:1px solid var(--border)!important;
+  box-shadow:0 6px 18px var(--shadow);
+  color:var(--text-0);
+}
+
+/* 입력/검색 */
+input, select, textarea{
+  background:var(--bg-2)!important;
+  color:var(--text-0)!important;
+  border:1px solid var(--border)!important;
+  outline:none;
+}
+input:focus, select:focus, textarea:focus{
+  border-color:var(--accent-2)!important;
+  box-shadow:0 0 0 3px rgba(255,122,0,.25)!important;
+}
+
+/* 버튼 공통 */
+button, .btn, .button, [role="button"]{
+  --btn-radius:12px;
+  --btn-h:42px;
+  height:var(--btn-h);
+  padding:0 16px;
+  border-radius:var(--btn-radius);
+  border:1px solid transparent;
+  font-weight:700;
+  letter-spacing:.2px;
+  transition:.2s ease;
+  cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+
+/* Primary = 오렌지 그라데이션 */
+.btn-primary, .primary, .btn--primary{
+  background:linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%)!important;
+  color:#111!important; /* 가독성 위해 검정 텍스트 */
+  box-shadow:0 8px 22px rgba(255,122,0,.35);
+}
+.btn-primary:hover, .primary:hover, .btn--primary:hover{
+  filter:brightness(1.05);
+  transform:translateY(-1px);
+}
+.btn-primary:active{transform:translateY(0); filter:brightness(.98);}
+
+/* Secondary = 화이트 솔리드(오렌지 보더) */
+.btn-secondary, .secondary, .btn--secondary{
+  background:var(--white)!important;
+  color:#111!important;
+  border:1px solid var(--accent-2)!important;
+}
+.btn-secondary:hover{box-shadow:0 6px 18px rgba(255,179,71,.35);}
+
+/* Outline = 테두리만 오렌지 */
+.btn-outline, .outline, .btn--outline{
+  background:transparent!important;
+  color:var(--white)!important;
+  border:1px solid var(--accent-2)!important;
+}
+.btn-outline:hover{background:rgba(255,179,71,.12)!important;}
+
+/* Ghost = 투명 + 오렌지 텍스트 */
+.btn-ghost, .ghost, .btn--ghost{
+  background:transparent!important;
+  color:var(--accent-2)!important;
+}
+.btn-ghost:hover{color:var(--accent-3)!important;}
+
+/* 태그/배지 */
+.badge, .tag, .pill, [class*="badge"], [class*="tag"]{
+  background:linear-gradient(90deg, var(--accent), var(--accent-2))!important;
+  color:#111!important;
+  border:none!important;
+}
+
+/* 쿠폰/프로모 카드(그라데이션 오렌지 통일) */
+.coupon, .coupon-card, [class*="coupon"]{
+  background:linear-gradient(135deg,#FF8C3A 0%,#FFB347 60%,#FFE1B0 100%)!important;
+  color:#111!important;
+  border:1px solid rgba(255,122,0,.35)!important;
+}
+
+/* 좌측 사이드바 활성 색 */
+.sidebar .active, .menu .active, .nav .active{
+  background:linear-gradient(90deg, rgba(255,122,0,.18), rgba(255,179,71,.08))!important;
+  border-left:3px solid var(--accent)!important;
+  color:var(--white)!important;
+}
+
+/* 히어로 CTA 버튼(쿠폰받기 등) 강제 정렬 */
+[class*="hero"] .btn, [id*="hero"] .btn{
+  box-shadow:0 10px 26px rgba(255,122,0,.45);
+}
+
+/* 토글/스위치(있다면) */
+.switch input:checked + .slider{
+  background:linear-gradient(90deg,var(--accent),var(--accent-2))!important;
+}
